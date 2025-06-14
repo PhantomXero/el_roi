@@ -44,6 +44,7 @@
 //! ## License
 //!
 //! MIT
+
 use std::io::*;
 
 // Error massage to let user know the error type
@@ -53,8 +54,8 @@ const INVALID_OPTION: &str = "Invalid input data type";
 // TODO: Add more functions to read different data types
 // TODO: Error handling for invalid inputs
 
-// Public API: user-facing functions (read from stdin)
-// Function to get String input from the user input
+/// Public API: user-facing functions (read from stdin)
+/// Function to get String input from the user input
 pub fn read_string(prompt: &str) -> String {
     question(prompt);
 
@@ -126,29 +127,29 @@ pub fn read_string_vec(prompt: &str) -> Vec<String> {
     read_string_vec_from(&mut handle)
 }
 
-// Private helpers: *_from functions for testability
-// Helper to covert user input from a buffered reader to a String
+/// Private helpers: *_from functions for testability
+/// Helper to covert user input from a buffered reader to a String
 fn read_string_from<R: BufRead>(reader: &mut R) -> String {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
     user_res.trim().to_string()
 }
 
-// Helper to convert user input from a buffered reader to an i32
+/// Helper to convert user input from a buffered reader to an i32
 fn read_int_from<R: BufRead>(reader: &mut R) -> i32 {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
     user_res.trim().parse::<i32>().expect(INVALID_OPTION)
 }
 
-// Helper to convert user input from a buffered reader to a f64
+/// Helper to convert user input from a buffered reader to a f64
 fn read_float_from<R: BufRead>(reader: &mut R) -> f64 {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
     user_res.trim().parse::<f64>().expect(INVALID_OPTION)
 }
 
-// Helper to convert user input from a buffered reader to a bool
+/// Helper to convert user input from a buffered reader to a bool
 fn read_bool_from<R: BufRead>(reader: &mut R) -> bool {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
@@ -159,17 +160,17 @@ fn read_bool_from<R: BufRead>(reader: &mut R) -> bool {
     }
 }
 
-// Helper to convert user input from a buffered reader to a char
-// Note: This function assumes the user will input a single character followed by a newline
+/// Helper to convert user input from a buffered reader to a char
+/// Note: This function assumes the user will input a single character followed by a newline
 fn read_char_from<R: BufRead>(reader: &mut R) -> char {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
     user_res.trim().chars().next().expect(INVALID_OPTION)
 }
 
-// Helper to convert user input from a buffered reader to a vector of integers
-// Note: This function assumes the user will input space-separated integers
-// Example input: "1 2 3 4 5"
+/// Helper to convert user input from a buffered reader to a vector of integers
+/// Note: This function assumes the user will input space-separated integers
+/// Example: "14 6 2025"
 fn read_int_vec_from<R: BufRead>(reader: &mut R) -> Vec<i32> {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
@@ -180,8 +181,9 @@ fn read_int_vec_from<R: BufRead>(reader: &mut R) -> Vec<i32> {
         .collect()
 }
 
-// Helper to convert user input from a buffered reader to a vector of floats
-// Note: This function assumes the user will input space-separated floats
+/// Helper to convert user input from a buffered reader to a vector of floats
+/// Note: This function assumes the user will input space-separated floats
+/// Example: "1.0 2.5 3.14"
 fn read_float_vec_from<R: BufRead>(reader: &mut R) -> Vec<f64> {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
@@ -192,8 +194,9 @@ fn read_float_vec_from<R: BufRead>(reader: &mut R) -> Vec<f64> {
         .collect()
 }
 
-// Helper to convert user input from a buffered reader to a vector of strings
-// Note: This function assumes the user will input space-separated strings
+/// Helper to convert user input from a buffered reader to a vector of strings
+/// Note: This function assumes the user will input space-separated strings
+/// Example: "This is so cool"
 fn read_string_vec_from<R: BufRead>(reader: &mut R) -> Vec<String> {
     let mut user_res = String::new();
     reader.read_line(&mut user_res).expect(ERR_MSG);
@@ -204,7 +207,7 @@ fn read_string_vec_from<R: BufRead>(reader: &mut R) -> Vec<String> {
         .collect()
 }
 
-// Helper function to print a question prompt
+/// Helper function to print a question prompt
 fn question(prompt: &str) {
     println!("{}: ", prompt);
 }
@@ -273,8 +276,11 @@ mod tests {
 
     #[test]
     fn test_read_string_vec_from() {
-        let input = b"foo bar baz\n";
+        let input = b"Anime is cool\n";
         let mut cursor = Cursor::new(input);
-        assert_eq!(read_string_vec_from(&mut cursor), vec!["foo", "bar", "baz"]);
+        assert_eq!(
+            read_string_vec_from(&mut cursor),
+            vec!["Anime", "is", "cool"]
+        );
     }
 }

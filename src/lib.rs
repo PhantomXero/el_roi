@@ -11,56 +11,72 @@ const INVALID_OPTION: &str = "Invalid input data type";
 
 // Public API: user-facing functions (read from stdin)
 // Function to get String input from the user input
-pub fn _read_string() -> String {
+pub fn read_string(prompt: &str) -> String {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_string_from(&mut handle)
 }
 
 /// Function to get an integer(i32) input from the user input
-pub fn _read_int() -> i32 {
+pub fn read_int(prompt: &str) -> i32 {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_int_from(&mut handle)
 }
 
 /// Function to get a float(f64) input from the user input
-pub fn _read_float() -> f64 {
+pub fn read_float(prompt: &str) -> f64 {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_float_from(&mut handle)
 }
 
 /// Function to get a boolean input from the user input
-pub fn _read_bool() -> bool {
+pub fn read_bool(prompt: &str) -> bool {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_bool_from(&mut handle)
 }
 
 /// Function to get a character input from the user input
-pub fn _read_char() -> char {
+pub fn read_char(prompt: &str) -> char {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_char_from(&mut handle)
 }
 
 /// Function to get a vector of integers(i32) input from the user input
-pub fn _read_int_vec() -> Vec<i32> {
+pub fn read_int_vec(prompt: &str) -> Vec<i32> {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_int_vec_from(&mut handle)
 }
 
 /// Function to get a vector of floats(f64) input from the user input
-pub fn _read_float_vec() -> Vec<f64> {
+pub fn read_float_vec(prompt: &str) -> Vec<f64> {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_float_vec_from(&mut handle)
 }
 
 /// Function to get a vector of strings input from the user input
-pub fn _read_string_vec() -> Vec<String> {
+pub fn read_string_vec(prompt: &str) -> Vec<String> {
+    question(prompt);
+
     let stdin = stdin();
     let mut handle = stdin.lock();
     read_string_vec_from(&mut handle)
@@ -142,6 +158,11 @@ fn read_string_vec_from<R: BufRead>(reader: &mut R) -> Vec<String> {
         .split_whitespace()
         .map(|s| s.to_string())
         .collect()
+}
+
+// Helper function to print a question prompt
+fn question(prompt: &str) {
+    println!("{}: ", prompt);
 }
 
 // Tests

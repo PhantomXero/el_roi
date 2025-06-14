@@ -1,0 +1,10 @@
+[package]
+name = "reader"
+version = "0.1.0"
+authors = ["Dalitso Banda <dalitso.w.banda@email.com>"]
+edition = "2021"
+description = "A crate to simplify reading user input"
+license = "MIT"
+repository = "https://github.com/PhantomXero/el_roi.git"
+
+[dependencies]

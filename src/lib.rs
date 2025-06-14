@@ -20,7 +20,7 @@
 //!
 //! ### Example
 //!
-//! ```rust
+//! ```no_run
 //! use el_roi::{read_string, read_int, read_float, read_bool, read_char, read_int_vec, read_float_vec, read_string_vec};
 //!
 //! fn main() {

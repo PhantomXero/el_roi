@@ -1,5 +1,49 @@
-/// Read: a rust crate that simplifies reading user input
-// import input/output controls
+//! # El Roi
+//!
+//! [![Crates.io](https://img.shields.io/crates/v/el_roi.svg)](https://crates.io/crates/el_roi)
+//! [![Docs.rs](https://docs.rs/el_roi/badge.svg)](https://docs.rs/el_roi)
+//! [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+//!
+//! `el_roi` is a Rust crate that simplifies reading user input from the command line. It provides ergonomic, prompt-driven functions for reading strings, integers, floats, booleans, characters, and vectors of these types, with a focus on usability and testability.
+//!
+//! ## Features
+//! - Prompt the user with a custom question for each input
+//! - Read integers (`i32`), floats (`f64`), booleans, characters, and vectors of these types
+//! - Testable design: all parsing logic is separated for easy unit testing
+//!
+//! ## Usage
+//!
+//! Add to your `Cargo.toml`:
+//! ```toml
+//! el_roi = "0.1.0"
+//! ```
+//!
+//! ### Example
+//!
+//! ```rust
+//! use el_roi::{read_string, read_int, read_float, read_bool, read_char, read_int_vec, read_float_vec, read_string_vec};
+//!
+//! fn main() {
+//!     let name = read_string("Enter your name");
+//!     let age = read_int("Enter your age");
+//!     let pi = read_float("Enter the value of pi");
+//!     let likes_rust = read_bool("Do you like Rust? (true/false)");
+//!     let initial = read_char("Enter the first letter of your name");
+//!     let numbers = read_int_vec("Enter some numbers separated by spaces");
+//!     let floats = read_float_vec("Enter some floats separated by spaces");
+//!     let words = read_string_vec("Enter some words separated by spaces");
+//!     println!("Hello, {}! Age: {} Pi: {} Likes Rust: {} Initial: {} Numbers: {:?} Floats: {:?} Words: {:?}",
+//!         name, age, pi, likes_rust, initial, numbers, floats, words);
+//! }
+//! ```
+//!
+//! ## Testing
+//!
+//! All parsing logic is separated into private helper functions, making it easy to test with in-memory buffers. See the crate's tests for examples.
+//!
+//! ## License
+//!
+//! MIT
 use std::io::*;
 
 // Error massage to let user know the error type
@@ -7,7 +51,7 @@ const ERR_MSG: &str = "Error reading user input";
 const INVALID_OPTION: &str = "Invalid input data type";
 
 // TODO: Add more functions to read different data types
-// TODO: Change the functions to get input strings and just convert them to the required type
+// TODO: Error handling for invalid inputs
 
 // Public API: user-facing functions (read from stdin)
 // Function to get String input from the user input

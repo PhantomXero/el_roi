@@ -4,7 +4,7 @@
 //! [![Docs.rs](https://docs.rs/el_roi/badge.svg)](https://docs.rs/el_roi)
 //! [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 //!
-//! `el_roi` is a Rust crate that simplifies reading user input from the command line. It provides ergonomic functions for reading strings, integers, floats, booleans, characters, and vectors of these types, with both prompted (`*_p`) and unprompted APIs for stream-style input.
+//! `el_roi` is a Rust crate that simplifies reading user input from the command line. It provides ergonomic functions for reading strings, integers, floats, booleans, characters, and vectors of these types, with both prompted (`prompt_*`) and unprompted APIs for stream-style input.
 //!
 //! ## Features
 //! - Prompted and unprompted input variants for each supported type
@@ -23,19 +23,19 @@
 //!
 //! ```no_run
 //! use el_roi::{
-//!     read_boolp, read_charp, read_floatp, read_float_vecp, read_intp, read_int_vecp, read_stringp,
-//!     read_string_vecp,
+//!     prompt_bool, prompt_char, prompt_float, prompt_float_vec, prompt_int, prompt_int_vec,
+//!     prompt_string, prompt_string_vec,
 //! };
 //!
 //! fn main() {
-//!     let name = read_stringp("Enter your name");
-//!     let age = read_intp("Enter your age");
-//!     let pi = read_floatp("Enter the value of pi");
-//!     let likes_rust = read_boolp("Do you like Rust? (true/false)");
-//!     let initial = read_charp("Enter the first letter of your name");
-//!     let numbers = read_int_vecp("Enter some numbers separated by spaces");
-//!     let floats = read_float_vecp("Enter some floats separated by spaces");
-//!     let words = read_string_vecp("Enter some words separated by spaces");
+//!     let name = prompt_string("Enter your name");
+//!     let age = prompt_int("Enter your age");
+//!     let pi = prompt_float("Enter the value of pi");
+//!     let likes_rust = prompt_bool("Do you like Rust? (true/false)");
+//!     let initial = prompt_char("Enter the first letter of your name");
+//!     let numbers = prompt_int_vec("Enter some numbers separated by spaces");
+//!     let floats = prompt_float_vec("Enter some floats separated by spaces");
+//!     let words = prompt_string_vec("Enter some words separated by spaces");
 //!     println!("Hello, {}! Age: {} Pi: {} Likes Rust: {} Initial: {} Numbers: {:?} Floats: {:?} Words: {:?}",
 //!         name, age, pi, likes_rust, initial, numbers, floats, words);
 //! }
@@ -54,8 +54,8 @@ mod unprompted;
 mod utils;
 
 pub use prompted::{
-    read_boolp, read_charp, read_floatp, read_float_vecp, read_intp, read_int_vecp, read_stringp,
-    read_string_vecp,
+    prompt_bool, prompt_char, prompt_float, prompt_float_vec, prompt_int, prompt_int_vec,
+    prompt_string, prompt_string_vec,
 };
 pub use unprompted::{
     read_bool, read_char, read_float, read_float_vec, read_int, read_int_vec, read_string,

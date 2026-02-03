@@ -7,7 +7,7 @@ use crate::utils::{
 
 /// Public API: user-facing functions (read from stdin)
 /// Function to get String input from the user input with a prompt
-pub fn read_stringp(prompt: &str) -> String {
+pub fn prompt_string(prompt: &str) -> String {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -15,7 +15,7 @@ pub fn read_stringp(prompt: &str) -> String {
 }
 
 /// Function to get an integer(i32) input from the user input with a prompt
-pub fn read_intp(prompt: &str) -> i32 {
+pub fn prompt_int(prompt: &str) -> i32 {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -23,7 +23,7 @@ pub fn read_intp(prompt: &str) -> i32 {
 }
 
 /// Function to get a float(f64) input from the user input with a prompt
-pub fn read_floatp(prompt: &str) -> f64 {
+pub fn prompt_float(prompt: &str) -> f64 {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -31,7 +31,7 @@ pub fn read_floatp(prompt: &str) -> f64 {
 }
 
 /// Function to get a boolean input from the user input with a prompt
-pub fn read_boolp(prompt: &str) -> bool {
+pub fn prompt_bool(prompt: &str) -> bool {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -39,7 +39,7 @@ pub fn read_boolp(prompt: &str) -> bool {
 }
 
 /// Function to get a character input from the user input with a prompt
-pub fn read_charp(prompt: &str) -> char {
+pub fn prompt_char(prompt: &str) -> char {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -47,7 +47,7 @@ pub fn read_charp(prompt: &str) -> char {
 }
 
 /// Function to get a vector of integers(i32) input from the user input with a prompt
-pub fn read_int_vecp(prompt: &str) -> Vec<i32> {
+pub fn prompt_int_vec(prompt: &str) -> Vec<i32> {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -55,7 +55,7 @@ pub fn read_int_vecp(prompt: &str) -> Vec<i32> {
 }
 
 /// Function to get a vector of floats(f64) input from the user input with a prompt
-pub fn read_float_vecp(prompt: &str) -> Vec<f64> {
+pub fn prompt_float_vec(prompt: &str) -> Vec<f64> {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
@@ -63,7 +63,7 @@ pub fn read_float_vecp(prompt: &str) -> Vec<f64> {
 }
 
 /// Function to get a vector of strings input from the user input with a prompt
-pub fn read_string_vecp(prompt: &str) -> Vec<String> {
+pub fn prompt_string_vec(prompt: &str) -> Vec<String> {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();

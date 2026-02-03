@@ -23,7 +23,7 @@ El Roi abstracts away the repetitive patterns of reading and parsing user input,
 Add El Roi as a dependency in your project's `Cargo.toml`:
 
 ```toml
-el_roi = "0.1.0"
+el_roi = "0.2.0"
 ```
 
 Or, if using a local path during development:

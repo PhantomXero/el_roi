@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-edit
+        run: cargo install cargo-edit --locked
+
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          cargo_path = Path("Cargo.toml")
+          content = cargo_path.read_text(encoding="utf-8").splitlines()
+          version_line_index = None
+          version = None
+          for i, line in enumerate(content):
+            if line.startswith("version"):
+              version_line_index = i
+              version = re.search(r'"([^"]+)"', line).group(1)
+              break
+          if version is None:
+            raise SystemExit("Could not find version in Cargo.toml")
+
+          major, minor, patch = (int(part) for part in version.split("."))
+          if major == 0:
+            if minor == 9:
+              major, minor = 1, 0
+            else:
+              minor += 1
+          else:
+            minor += 1
+          patch = 0
+          new_version = f"{major}.{minor}.{patch}"
+          content[version_line_index] = f'version = "{new_version}"'
+          cargo_path.write_text("\n".join(content) + "\n", encoding="utf-8")
+          print(new_version)
+          PY
+
+      - name: Sync README version
+        run: |
+          new_version=$(python - <<'PY'
+          import re
+          with open("Cargo.toml", "r", encoding="utf-8") as f:
+              for line in f:
+                  if line.startswith("version"):
+                      print(re.search(r'"([^"]+)"', line).group(1))
+                      break
+          PY
+          )
+          python - <<PY
+          import re
+          from pathlib import Path
+          readme = Path("README.md")
+          text = readme.read_text(encoding="utf-8")
+          text = re.sub(r'el_roi = "\\d+\\.\\d+\\.\\d+"', 'el_roi = "${new_version}"', text)
+          readme.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit and tag
+        run: |
+          new_version=$(python - <<'PY'
+          import re
+          with open("Cargo.toml", "r", encoding="utf-8") as f:
+              for line in f:
+                  if line.startswith("version"):
+                      print(re.search(r'"([^"]+)"', line).group(1))
+                      break
+          PY
+          )
+          git add Cargo.toml Cargo.lock README.md
+          git commit -m "Bump version to v${new_version}"
+          git tag "v${new_version}"
+          git push --follow-tags
+
+      - name: Publish to crates.io
+        run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATE_ACCESS_TOKEN }}

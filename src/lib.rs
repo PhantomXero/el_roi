@@ -4,12 +4,13 @@
 //! [![Docs.rs](https://docs.rs/el_roi/badge.svg)](https://docs.rs/el_roi)
 //! [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 //!
-//! `el_roi` is a Rust crate that simplifies reading user input from the command line. It provides ergonomic, prompt-driven functions for reading strings, integers, floats, booleans, characters, and vectors of these types, with a focus on usability and testability.
+//! `el_roi` is a Rust crate that simplifies reading user input from the command line. It provides ergonomic functions for reading strings, integers, floats, booleans, characters, and vectors of these types, with both prompted (`*_p`) and unprompted APIs for stream-style input.
 //!
 //! ## Features
-//! - Prompt the user with a custom question for each input
+//! - Prompted and unprompted input variants for each supported type
 //! - Read integers (`i32`), floats (`f64`), booleans, characters, and vectors of these types
 //! - Testable design: all parsing logic is separated for easy unit testing
+//! - Prompted reads re-prompt on invalid input and show an example of valid input
 //!
 //! ## Usage
 //!
@@ -21,17 +22,20 @@
 //! ### Example
 //!
 //! ```no_run
-//! use el_roi::{read_string, read_int, read_float, read_bool, read_char, read_int_vec, read_float_vec, read_string_vec};
+//! use el_roi::{
+//!     read_boolp, read_charp, read_floatp, read_float_vecp, read_intp, read_int_vecp, read_stringp,
+//!     read_string_vecp,
+//! };
 //!
 //! fn main() {
-//!     let name = read_string("Enter your name");
-//!     let age = read_int("Enter your age");
-//!     let pi = read_float("Enter the value of pi");
-//!     let likes_rust = read_bool("Do you like Rust? (true/false)");
-//!     let initial = read_char("Enter the first letter of your name");
-//!     let numbers = read_int_vec("Enter some numbers separated by spaces");
-//!     let floats = read_float_vec("Enter some floats separated by spaces");
-//!     let words = read_string_vec("Enter some words separated by spaces");
+//!     let name = read_stringp("Enter your name");
+//!     let age = read_intp("Enter your age");
+//!     let pi = read_floatp("Enter the value of pi");
+//!     let likes_rust = read_boolp("Do you like Rust? (true/false)");
+//!     let initial = read_charp("Enter the first letter of your name");
+//!     let numbers = read_int_vecp("Enter some numbers separated by spaces");
+//!     let floats = read_float_vecp("Enter some floats separated by spaces");
+//!     let words = read_string_vecp("Enter some words separated by spaces");
 //!     println!("Hello, {}! Age: {} Pi: {} Likes Rust: {} Initial: {} Numbers: {:?} Floats: {:?} Words: {:?}",
 //!         name, age, pi, likes_rust, initial, numbers, floats, words);
 //! }
@@ -45,177 +49,29 @@
 //!
 //! MIT
 
-use std::io::*;
+mod prompted;
+mod unprompted;
+mod utils;
 
-// Error massage to let user know the error type
-const ERR_MSG: &str = "Error reading user input";
-const INVALID_OPTION: &str = "Invalid input data type";
+pub use prompted::{
+    read_boolp, read_charp, read_floatp, read_float_vecp, read_intp, read_int_vecp, read_stringp,
+    read_string_vecp,
+};
+pub use unprompted::{
+    read_bool, read_char, read_float, read_float_vec, read_int, read_int_vec, read_string,
+    read_string_vec,
+};
 
 // TODO: Add more functions to read different data types
 // TODO: Error handling for invalid inputs
 
-/// Public API: user-facing functions (read from stdin)
-/// Function to get String input from the user input
-pub fn read_string(prompt: &str) -> String {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_string_from(&mut handle)
-}
-
-/// Function to get an integer(i32) input from the user input
-pub fn read_int(prompt: &str) -> i32 {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_int_from(&mut handle)
-}
-
-/// Function to get a float(f64) input from the user input
-pub fn read_float(prompt: &str) -> f64 {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_float_from(&mut handle)
-}
-
-/// Function to get a boolean input from the user input
-pub fn read_bool(prompt: &str) -> bool {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_bool_from(&mut handle)
-}
-
-/// Function to get a character input from the user input
-pub fn read_char(prompt: &str) -> char {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_char_from(&mut handle)
-}
-
-/// Function to get a vector of integers(i32) input from the user input
-pub fn read_int_vec(prompt: &str) -> Vec<i32> {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_int_vec_from(&mut handle)
-}
-
-/// Function to get a vector of floats(f64) input from the user input
-pub fn read_float_vec(prompt: &str) -> Vec<f64> {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_float_vec_from(&mut handle)
-}
-
-/// Function to get a vector of strings input from the user input
-pub fn read_string_vec(prompt: &str) -> Vec<String> {
-    question(prompt);
-
-    let stdin = stdin();
-    let mut handle = stdin.lock();
-    read_string_vec_from(&mut handle)
-}
-
-/// Private helpers: *_from functions for testability
-/// Helper to covert user input from a buffered reader to a String
-fn read_string_from<R: BufRead>(reader: &mut R) -> String {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res.trim().to_string()
-}
-
-/// Helper to convert user input from a buffered reader to an i32
-fn read_int_from<R: BufRead>(reader: &mut R) -> i32 {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res.trim().parse::<i32>().expect(INVALID_OPTION)
-}
-
-/// Helper to convert user input from a buffered reader to a f64
-fn read_float_from<R: BufRead>(reader: &mut R) -> f64 {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res.trim().parse::<f64>().expect(INVALID_OPTION)
-}
-
-/// Helper to convert user input from a buffered reader to a bool
-fn read_bool_from<R: BufRead>(reader: &mut R) -> bool {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    match user_res.trim().to_lowercase().as_str() {
-        "true" | "yes" | "1" | "y" | "Y" => true,
-        "false" | "no" | "0" | "n" | "N" => false,
-        _ => panic!("{}", INVALID_OPTION),
-    }
-}
-
-/// Helper to convert user input from a buffered reader to a char
-/// Note: This function assumes the user will input a single character followed by a newline
-fn read_char_from<R: BufRead>(reader: &mut R) -> char {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res.trim().chars().next().expect(INVALID_OPTION)
-}
-
-/// Helper to convert user input from a buffered reader to a vector of integers
-/// Note: This function assumes the user will input space-separated integers
-/// Example: "14 6 2025"
-fn read_int_vec_from<R: BufRead>(reader: &mut R) -> Vec<i32> {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res
-        .trim()
-        .split_whitespace()
-        .map(|s| s.parse::<i32>().expect(INVALID_OPTION))
-        .collect()
-}
-
-/// Helper to convert user input from a buffered reader to a vector of floats
-/// Note: This function assumes the user will input space-separated floats
-/// Example: "1.0 2.5 3.14"
-fn read_float_vec_from<R: BufRead>(reader: &mut R) -> Vec<f64> {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res
-        .trim()
-        .split_whitespace()
-        .map(|s| s.parse::<f64>().expect(INVALID_OPTION))
-        .collect()
-}
-
-/// Helper to convert user input from a buffered reader to a vector of strings
-/// Note: This function assumes the user will input space-separated strings
-/// Example: "This is so cool"
-fn read_string_vec_from<R: BufRead>(reader: &mut R) -> Vec<String> {
-    let mut user_res = String::new();
-    reader.read_line(&mut user_res).expect(ERR_MSG);
-    user_res
-        .trim()
-        .split_whitespace()
-        .map(|s| s.to_string())
-        .collect()
-}
-
-/// Helper function to print a question prompt
-fn question(prompt: &str) {
-    println!("{}: ", prompt);
-}
-
 // Tests
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::utils::{
+        read_bool_from, read_char_from, read_float_from, read_float_vec_from, read_int_from,
+        read_int_vec_from, read_string_from, read_string_vec_from,
+    };
     use std::io::Cursor;
 
     #[test]

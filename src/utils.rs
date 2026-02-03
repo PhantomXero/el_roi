@@ -110,7 +110,7 @@ pub(crate) fn read_string_vec_from<R: BufRead>(reader: &mut R) -> Vec<String> {
         .collect()
 }
 
-pub(crate) fn read_int_retry<R: BufRead>(reader: &mut R, prompt: Option<&str>) -> i32 {
+pub(crate) fn read_int_retrry<R: BufRead>(reader: &mut R, prompt: Option<&str>) -> i32 {
     loop {
         match parse_from_reader(reader) {
             Ok(value) => return value,

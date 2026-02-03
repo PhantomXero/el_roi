@@ -1,7 +1,7 @@
 use std::io::stdin;
 
 use crate::utils::{
-    read_bool_loop, read_char_loop, read_float_loop, read_float_vec_loop, read_int_retry,
+    read_bool_loop, read_char_loop, read_float_loop, read_float_vec_loop, read_int_retrry,
     read_int_vec_loop, read_string_from, read_string_vec_from,
 };
 
@@ -16,7 +16,7 @@ pub fn read_string() -> String {
 pub fn read_int() -> i32 {
     let stdin = stdin();
     let mut handle = stdin.lock();
-    read_int_retry(&mut handle, None)
+    read_int_retrry(&mut handle, None)
 }
 
 /// Function to get a float(f64) input from the user input without a prompt

@@ -2,7 +2,7 @@ use std::io::stdin;
 
 use crate::utils::{
     print_prompt, read_bool_loop, read_char_loop, read_float_loop, read_float_vec_loop,
-    read_int_retry, read_int_vec_loop, read_string_from, read_string_vec_from,
+    read_int_retrry, read_int_vec_loop, read_string_from, read_string_vec_from,
 };
 
 /// Public API: user-facing functions (read from stdin)
@@ -19,7 +19,7 @@ pub fn prompt_int(prompt: &str) -> i32 {
     print_prompt(prompt);
     let stdin = stdin();
     let mut handle = stdin.lock();
-    read_int_retry(&mut handle, Some(prompt))
+    read_int_retrry(&mut handle, Some(prompt))
 }
 
 /// Function to get a float(f64) input from the user input with a prompt
